@@ -5,4 +5,5 @@ this site use
 1. PHP
 2. MySQL
 3. Vue
-4. Bootstrap
+4. axios
+5. Bootstrap
