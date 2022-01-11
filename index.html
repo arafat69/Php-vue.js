@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+</head>
+
+<body style="font-family: sans-serif;">
+<div id="app">
+    <div class="container">
+        <!-- add new student -->
+        <button class="btn btn-success rounded-0 my-3" data-bs-toggle="modal" data-bs-target="#studentNewStudent">
+            {{ Button }}
+        </button>
+
+        <div v-if="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          <strong>{{errorMessage}}</strong> 
+        </div>
+
+        <div v-if="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          <strong>{{successMessage}}</strong> 
+        </div>
+        
+    
+
+        <!-- add student Modal-->
+     <div class="modal fade" id="studentNewStudent">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add New Student</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form >
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group mb-2">
+                                    <label for="">Name</label>
+                                    <input type="text" v-model="form.name" placeholder="Student Full Name"
+                                        class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group mb-2">
+                                    <label for="">Roll Number</label>
+                                    <input type="text" v-model="form.roll" placeholder="Roll Number" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group mb-2">
+                                    <label for="">Reg Number</label>
+                                    <input type="text" v-model="form.reg" placeholder="Registration Number"
+                                        class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group mb-2">
+                                    <label for="">Select Department</label>
+                                    <select v-model="form.department" class="form-select">
+                                        <option value="Computer">Computer</option>
+                                        <option value="Electrical">Electrical</option>
+                                        <option value="Civil">Civil</option>
+                                        <option value="Environment">Environment</option>
+                                    </select>
+                                </div>
+                            </div>
+                           
+                            <div class="col-sm-6">
+                                <div class="form-group mb-2">
+                                    <label for="">Email</label>
+                                    <input type="email" v-model="form.email" placeholder="Enter Email"
+                                        class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-bs-dismiss="modal" aria-label="Close" @click="InsertNewData()" class="btn btn-primary">Submit Info</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+        <!-- student table -->
+        <div class="table-responsive-md">
+            <table class="table table-light table-bordered table-striped">
+                <thead class="table-warning">
+                    <tr>
+                        <th class="text-center">No</th>
+                        <th>Name</th>
+                        <th>Roll</th>
+                        <th>Reg:</th>
+                        <th>Department</th>
+                        <th>Email</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(user, index) in users">
+                       <td class="text-center">{{index+1}}</td>
+                       <td>{{user.name}}</td>
+                       <td>{{user.roll}}</td>
+                       <td>{{user.reg}}</td>
+                       <td>{{user.department}}</td>
+                       <td>{{user.email}}</td>
+                        <td>
+                            <a href="javascript:void(0)" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#student1" @click="setUpdateData(user)">Edit</a>
+                            <button class="btn btn-danger btn-sm" @click="deleteUser(user.id)" >Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+ <!-- edit table information Modal-->
+ <div class="modal fade" id="student1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit Student Information</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group mb-2">
+                                <label for="">Name</label>
+                                <input type="text" v-model="updateUser.name"
+                                    class="form-control form-control-sm">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group mb-2">
+                                <label for="">Roll Number</label>
+                                <input type="text" v-model="updateUser.roll"
+                                    class="form-control form-control-sm">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group mb-2">
+                                <label for="">Reg Number</label>
+                                <input type="text" v-model="updateUser.reg"
+                                    class="form-control form-control-sm">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group mb-2">
+                                <label for="">Select Department</label>
+                                <select v-model="updateUser.department" class="form-select form-select-sm">
+                                    <option value="Computer">Computer</option>
+                                    <option value="Electrical">Electrical</option>
+                                    <option value="Civil">Civil</option>
+                                    <option value="Environment">Environment</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group mb-2">
+                                <label for="">Email</label>
+                                <input type="email" v-model="updateUser.email"
+                                    class="form-control form-control-sm">
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                <button type="button" @click="updateUserData()" data-bs-dismiss="modal" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+    </div>
+
+
+</div>
+
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/axios.min.js"></script>
+    <script src="js/vue.js"></script>
+
+    <script>
+
+let app = new Vue({
+    el: '#app',
+    data: {
+        Button:'Add New Student',
+      users : [],
+      form : {
+          name:null,
+          roll:null,
+          reg:null,
+          department:null,
+          email:null,
+      },
+      updateUser:{},
+      errorMessage: null,
+      successMessage: null,
+      
+    },
+    methods: {
+        getData: function (){
+            axios.get('http://localhost/student/api.php?action=read')
+            .then(function(response){
+                if (!response.data.error) {
+                    app.users = response.data.user;
+                }else{
+                    app.errorMessage = response.data.message;
+                }
+            });
+        },
+
+        InsertNewData: function(){
+            let formData = this.toFormData(this.form);
+
+            axios.post('http://localhost/student/api.php?action=create', formData)
+            .then(function(response){
+                if (!response.data.error) {
+                    app.form.name = null;
+                    app.form.roll = null;
+                    app.form.reg = null;
+                    app.form.department = null;
+                    app.form.email = null;
+
+                    app.getData();
+                    app.users = response.data.user;
+                    app.successMessage = response.data.message;
+                }else{
+                    app.errorMessage = response.data.message;
+                }
+            });
+        },
+
+        updateUserData: function(){
+            let formData = this.toFormData(this.updateUser);
+
+            axios.post('http://localhost/student/api.php?action=update', formData)
+            .then(function(response){
+                if (!response.data.error) {
+                    app.getData();
+                    app.users = response.data.user;
+                    app.successMessage = response.data.message;
+                }else{
+                    app.errorMessage = response.data.message;
+                }
+            });
+        },
+        
+        deleteUser: function (id){
+            let formData = this.toFormData({id: id});
+            axios.post('http://localhost/student/api.php?action=delete', formData)
+            .then(function(response){
+                if (!response.data.error) {
+                    app.getData();
+                    app.users = response.data.user;
+                    app.successMessage = response.data.message;
+                }else{
+                    app.errorMessage = response.data.message;
+                }
+            });
+        },
+        setUpdateData: function(user){
+            this.updateUser = user;
+        },
+        toFormData: function(obj){
+            let data = new FormData;
+            for ( let key in obj){
+                data.append(key, obj[key])
+            }
+            return data;
+        }
+
+    },
+    mounted: function() {
+        this.getData();
+    },
+   
+});
+
+    </script>
+</body>
+
+</html>
